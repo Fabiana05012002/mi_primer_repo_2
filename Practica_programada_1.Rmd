@@ -1,0 +1,160 @@
+---
+title: "Practica_programada_1"
+author: "Fabiana Hidalgo Fallas"
+date: "2023-07-05"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(readr)
+library(readxl)
+library(tidyr)# doma de datos
+library(janitor)
+```
+
+Se obtendran los datos de la siguiente manera:
+
+```{r}
+Datos_netflix <- read.csv2("https://raw.githubusercontent.com/isa229/programacion_analisis_datos_ii/main/netflix_info.csv")
+```
+
+
+## Renombrar variables.
+
+
+Se renombrarán los nombres de las variables
+
+```{r}
+Datos_netflix <- Datos_netflix |> 
+  rename(id = show_id,
+         tipo = type,
+         titulo = title,
+         pais = country,
+         fecha_agregada =date_added,
+         fecha_realizacion = release_year,
+         duracion=duration,
+         listado = listed_in)
+```
+
+
+## filas duplicadas
+
+
+Se revisan las filas duplicadas
+
+```{r}
+datos_netflix_revisa_diplicados <- Datos_netflix|> 
+  get_dupes()
+```
+
+Se  revisa si se realiza el cambio:
+
+```{r}
+filas_eliminadas_duplicadas <- Datos_netflix|>
+  distinct()
+
+```
+
+Se eliminan las variables del Data de Netflix
+
+```{r}
+Datos_netflix <- Datos_netflix|> 
+  distinct()
+```
+
+
+## Filas y columnas vacias
+
+
+Se revisan las vacias
+
+```{r}
+Datos_netflix <- Datos_netflix |> 
+  remove_empty(which = c("rows", "cols"))
+```
+
+
+## Eliminacion de variables
+
+
+Se elimina la variable fecha de realización
+
+```{r}
+Datos_netflix <- Datos_netflix|> 
+  select(-fecha_realizacion) |> 
+  distinct()
+```
+
+
+##Limpieza de variables
+
+Se revisarán las variables de tipo y pais.
+
+
+```{r}
+Datos_netflix <- Datos_netflix  |>
+  mutate(across(c(tipo), function(x) ifelse(x == "movie", "Movie", x))) |>
+  mutate(across(c(tipo), function(x) ifelse(x == "tv show", "TV Show", x))) |>
+  mutate(across(c(tipo), function(x) ifelse(x == "Movi", "Movie", x))) |> 
+  mutate(across(c(tipo), function(x) ifelse(x == "TV SHOW", "TV Show", x)))
+```
+
+
+```{r}
+ Datos_netflix<- Datos_netflix|>
+  mutate(pais = ifelse(pais == "united states", "United States", pais)) |>
+  mutate(pais = ifelse(pais== "india", "India", pais)) |>
+  mutate(pais = ifelse(pais == "pakistan", "Pakistan", pais)) |> 
+  mutate(pais = ifelse(pais == "canada", "Canada", pais)) |> 
+  mutate(pais = ifelse(pais == "United State", "United States", pais))
+
+```
+
+```{r}
+Datos_pais_tipo <- Datos_netflix |>
+  select(pais,tipo)
+```
+
+  ## g. Cambia los vacios
+  
+ 
+ Se remplazarán los vacios por sin informacion y se revisarán.
+ 
+```{r}
+Datos_netfix_vacios <- Datos_netflix |> 
+   mutate(across(where(is.character), ~ifelse(. == "", "Sin información", .)))
+```
+
+
+Se agregan al data original
+
+```{r}
+Datos_netflix<- Datos_netflix |> 
+   mutate(across(where(is.character), ~ifelse(. == "", "Sin información", .)))
+```
+
+## Agregar nueva columna
+
+Se revisará primero 
+
+```{r}
+atos_netflix <- Datos_netflix |> 
+  mutate(fecha_agregada = mdy(fecha_agregada))
+```
+
+Se corregirá la data
+
+```{r}
+Datos_netflix <- Datos_netflix |> 
+  mutate(fecha_agregada = mdy(fecha_agregada))
+```
+
+se añadirán las nuevas columnas
+
+```{r}
+Datos_netflix <- Datos_netflix |> 
+  mutate(año_agregada =year(fecha_agregada)) |> 
+  mutate(mes_agregada = month(fecha_agregada))
+```
