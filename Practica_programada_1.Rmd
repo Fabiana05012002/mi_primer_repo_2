@@ -158,3 +158,48 @@ Datos_netflix <- Datos_netflix |>
   mutate(año_agregada =year(fecha_agregada)) |> 
   mutate(mes_agregada = month(fecha_agregada))
 ```
+
+## Segunda parte
+
+Cuántas películas y shows de TV hay por país?
+
+```{r}
+Datos_netflix_peliculas_por_pais <- Datos_netflix |> 
+  group_by(pais) |> 
+  summarise(Movie = sum(tipo == "Movie"),
+            "TV Show" = sum(tipo == "TV Show"))
+```
+
+Cuáles son los 10 directores con mayor cantidad de películas (sin contar shows de TV) en Netflix?
+Ordénelos por orden descendente.
+
+```{r}
+directores_netflix_TV_Movie <- Datos_netflix |> 
+  filter(tipo != "TV Show") |> 
+  group_by(director) |> 
+  summarise(Conteo = n()) |> 
+  arrange(desc(Conteo)) |> 
+  top_n(10)
+```
+
+Cuáles son los 10 directores con mayor cantidad de shows de TV (sin contar películas) en Netflix?
+Ordénelos por orden descendente.
+
+```{r}
+directores_netflix_TV_Show <- Datos_netflix |> 
+  filter(tipo != "Movie") |> 
+  group_by(director) |> 
+  summarise(Conteo = n()) |> 
+  arrange(desc(Conteo)) |> 
+  top_n(10) 
+```
+
+Obtenga la lista de películas y shows de TV que se añadieron en marzo del año 2020. Cuántos fueron?
+
+```{r}
+Datos_marzo_2020 <- Datos_netflix |> 
+  filter(tipo %in% c("Movie", "TV Show"), mes_agregada == "3", año_agregada == 2020) |> 
+  select(titulo,tipo, mes_agregada, año_agregada)
+```
+
+Practica_programada_Finalizada
