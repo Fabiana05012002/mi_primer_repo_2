@@ -1,0 +1,48 @@
+---
+title: "Practica Programada"
+author: "Fabiana Hidalgo Fallas"
+date: "2023-07-27"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(readr)
+library(readxl)
+library(tidyr)
+library(janitor)
+library(lubridate)
+library(utils)
+library(gt)
+library(datasets)
+library(tinytex)
+library(stringr)
+library(leaflet)
+
+```
+
+
+```{r}
+Datos_calidad_aire <- read.csv("https://raw.githubusercontent.com/isa229/programacion_analisis_datos_ii/main/air_quality_index.csv")
+```
+
+Cuántas categorías diferentes de AQI (AQI Category) hay en este conjunto de datos? Cuáles son?
+
+```{r}
+glimpse(Datos_calidad_aire)
+```
+
+
+Este me muestra solo el número
+```{r}
+Datos_calidad_aire |> 
+  distinct(AQI.Category) |> 
+  count()
+```
+
+Este me muestra cuales son:
+```{r}
+categorias_diferentes <-Datos_calidad_aire |> 
+  distinct(AQI.Category)
+```
