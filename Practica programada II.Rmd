@@ -46,3 +46,90 @@ Este me muestra cuales son:
 categorias_diferentes <-Datos_calidad_aire |> 
   distinct(AQI.Category)
 ```
+
+c. Cree una tabla que indique la cantidad de ciudades que hay en cada categoría de AQI (AQI Category).
+Adicionalmente, traduzca las categorías a español
+
+
+```{r}
+Ciudades_por_categoria <- Datos_calidad_aire |> 
+  select(AQI.Category, City) |> 
+  group_by(AQI.Category) |> 
+  summarise(num_ciudades = n())
+```
+
+```{r}
+Ciudades_por_categoria$AQI.Category <- Ciudades_por_categoria$AQI.Category |> 
+  recode("Good" = "Bueno",
+         "Moderate" = "Moderado",
+         "Unhealthy" = "No saludable",
+         "Very Unhealthy" = "Muy insalubre",
+         "Unhealthy for Sensitive Groups" = "No saludable para grupos sensibles",
+         "Hazardous" = "Peligroso")
+
+```
+
+```{r}
+Ciudades_por_categoria_gt <- Ciudades_por_categoria |> 
+  gt() |> 
+  tab_header(
+    title = "Cantidad de Ciudades en cada Categoría de AQI",
+    subtitle = "Datos de calidad del aire"
+  )
+```
+
+```{r}
+Ciudades_por_categoria_gt
+```
+
+Obtenga el promedio del AQI Value por país, y cree 2 tablas: Una que muestre los 10 países con los
+valores más bajos de AQI, y otra que muestre los 10 países con los valores más altos de AQI. Presente
+estas tablas con el paquete gt, añadiendo títulos y subtítulos
+
+```{r}
+AQIValue_promedio_por_pais <- Datos_calidad_aire |> 
+  group_by(Country) |> 
+  summarise(Promedio_AQI = mean(AQI.Value, na.rm = TRUE))
+
+```
+
+Valores altos:
+
+```{r}
+paises_con_valores_altos <- AQIValue_promedio_por_pais |> 
+  arrange(desc(Promedio_AQI)) |> 
+  head(10)
+```
+
+```{r}
+Paises_con_valores_altos_tabla_1<- paises_con_valores_altos |> 
+  gt() |> 
+  tab_header(
+    title = "Países con los Valores más altos de AQI",
+    subtitle = "Promedio AQI value por país"
+  )
+```
+
+```{r}
+Paises_con_valores_altos_tabla_1
+```
+
+
+```{r}
+Paises_con_valores_bajos <- AQIValue_promedio_por_pais |> 
+  arrange(Promedio_AQI) |> 
+  head(10)
+```
+
+```{r}
+paises_con_valores_bajos_Tabla2<- Paises_con_valores_bajos |>
+  gt() |> 
+  tab_header(
+    title = "Países con los valores más bajos de AQI",
+    subtitle = "Promedio del AQI value por país"
+  )
+```
+
+```{r}
+paises_con_valores_bajos_Tabla2
+```
