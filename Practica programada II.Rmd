@@ -133,3 +133,44 @@ paises_con_valores_bajos_Tabla2<- Paises_con_valores_bajos |>
 ```{r}
 paises_con_valores_bajos_Tabla2
 ```
+
+Para los 10 países con los valores promedios más altos de AQI, muestrelos en un mapa de leaflet usando
+addMarkers o un addCircles. En el popup debe colocar el valor promedio del AQI.
+
+```{r}
+AQIValue_promedio_por_ciudades <- Datos_calidad_aire |> 
+  group_by(City) |> 
+  summarise(Promedio_AQI = mean(AQI.Value, na.rm = TRUE))
+
+```
+
+Valores altos:
+
+```{r}
+ciudades_con_valores_altos <- AQIValue_promedio_por_ciudades |> 
+  arrange(desc(Promedio_AQI)) |> 
+  head(10)
+```
+
+```{r}
+Ciudades_con_lat_long <-merge(ciudades_con_valores_altos, Datos_calidad_aire[c("City", "lat", "lng")], by = "City")
+```
+
+
+
+```{r}
+Ciudades_con_lat_long <- Ciudades_con_lat_long |> 
+arrange(Promedio_AQI) |> 
+  head(10)
+```
+
+
+```{r}
+Paises_altos_mapa <- Ciudades_con_lat_long |>
+  leaflet() |>
+  addTiles() |>
+  addMarkers(lng = ~lng, lat = ~lat, popup = ~City)
+Paises_altos_mapa
+```
+
+
