@@ -19,6 +19,8 @@ library(datasets)
 library(tinytex)
 library(stringr)
 library(leaflet)
+library(readxl)
+library(writexl)
 
 ```
 
@@ -172,5 +174,48 @@ Paises_altos_mapa <- Ciudades_con_lat_long |>
   addMarkers(lng = ~lng, lat = ~lat, popup = ~City)
 Paises_altos_mapa
 ```
+
+f. Escriba el código que exporte los datos en un excel, de tal manera que cada pestaña tenga solamente
+los datos de una categoría de AQI. (Es decir una pestaña para las ciudades cuya categoría es “Good”
+o “Buena”, otra para los que la categoría es “Moderate” y así para cada cateoría).
+
+```{r}
+Datos_calidad_aire$AQI.Category <- Datos_calidad_aire$AQI.Category |> 
+  recode("Good" = "Bueno",
+         "Moderate" = "Moderado",
+         "Unhealthy" = "No_saludable",
+         "Very Unhealthy" = "Muy_insalubre",
+         "Unhealthy for Sensitive Groups" = "No_saludable_sensibles",
+         "Hazardous" = "Peligroso")
+```
+
+
+```{r}
+datos_categoria_AQI_excel <- list("Bueno" = Good <-Datos_calidad_aire |> 
+    filter(AQI.Category == "Bueno"),
+    "Insalubre"= Unhealthy <- Datos_calidad_aire |> 
+      filter(AQI.Category == "Moderado"),
+    
+    "Moderado"= Moderate <- Datos_calidad_aire |> 
+      filter(AQI.Category == "Moderado"),
+    
+    "Peligroso" = Peligroso <- Datos_calidad_aire |> 
+      filter(AQI.Category == "Peligroso"),
+    
+    "No saludable" = No_saludable <- Datos_calidad_aire |> 
+      filter(AQI.Category == "No_saludable"),
+    
+      "Muy insalubre" = Muy_insalubre <- Datos_calidad_aire |> 
+      filter(AQI.Category == "Muy_insalubre"),
+    
+    "No_saludable_sensibles" = No_saludable_sensibles <- Datos_calidad_aire |> 
+      filter(AQI.Category == "No_saludable_sensibles"))
+
+write_xlsx(datos_categoria_AQI_excel,path = "datos/colegios_limpia_y_sin_procesar.xlsx")
+
+
+```
+
+
 
 
