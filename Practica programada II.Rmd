@@ -193,17 +193,14 @@ Datos_calidad_aire$AQI.Category <- Datos_calidad_aire$AQI.Category |>
 ```{r}
 datos_categoria_AQI_excel <- list("Bueno" = Good <-Datos_calidad_aire |> 
     filter(AQI.Category == "Bueno"),
-    "Insalubre"= Unhealthy <- Datos_calidad_aire |> 
-      filter(AQI.Category == "Moderado"),
+    "No_saludable"= No_saludable <- Datos_calidad_aire |> 
+      filter(AQI.Category == "No_saludable"),
     
     "Moderado"= Moderate <- Datos_calidad_aire |> 
       filter(AQI.Category == "Moderado"),
     
     "Peligroso" = Peligroso <- Datos_calidad_aire |> 
       filter(AQI.Category == "Peligroso"),
-    
-    "No saludable" = No_saludable <- Datos_calidad_aire |> 
-      filter(AQI.Category == "No_saludable"),
     
       "Muy insalubre" = Muy_insalubre <- Datos_calidad_aire |> 
       filter(AQI.Category == "Muy_insalubre"),
