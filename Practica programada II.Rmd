@@ -211,7 +211,7 @@ datos_categoria_AQI_excel <- list("Bueno" = Good <-Datos_calidad_aire |>
     "No_saludable_sensibles" = No_saludable_sensibles <- Datos_calidad_aire |> 
       filter(AQI.Category == "No_saludable_sensibles"))
 
-write_xlsx(datos_categoria_AQI_excel,path = "datos/colegios_limpia_y_sin_procesar.xlsx")
+write_xlsx(datos_categoria_AQI_excel,path = "datos/datos_air_AQI.CATEGORY.xlsx")
 
 
 ```
